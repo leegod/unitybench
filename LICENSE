@@ -1,16 +1,16 @@
-UnityBench by 14dimension — Licensing
+UnityBench by 14Dimension Enterprise — Licensing
 
 DATA (everything under data/ and results/):
   Creative Commons Attribution 4.0 International (CC-BY-4.0).
   You are free to use, share, and adapt the data, including commercially,
-  provided you give appropriate credit to "14dimension" and link back to
+  provided you give appropriate credit to "14Dimension Enterprise" and link back to
   https://github.com/leegod/unitybench .
   Full text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 CODE (everything under eval/):
   MIT License
 
-  Copyright (c) 2026 14dimension
+  Copyright (c) 2026 14Dimension Enterprise
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal

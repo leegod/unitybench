@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 title: "UnityBench: Unity 6 Knowledge & Real-World Bug-Review Evaluation"
-message: "If you use this benchmark, please cite it and credit 14dimension."
+message: "If you use this benchmark, please cite it and credit 14Dimension Enterprise."
 authors:
-  - name: "14dimension"
+  - name: "14Dimension Enterprise"
 version: "1.0.0"
 date-released: "2026-06-16"
 license: "CC-BY-4.0"

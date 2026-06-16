@@ -4,7 +4,7 @@
 
 Generalist code models are strong — but how well do they actually handle **Unity 6**, and can they find **real bugs in real game code** without crying wolf? There was no good public answer. This benchmark is one.
 
-Built by [14dimension](https://github.com/leegod) from a shipping Unity TRPG — bugs and fixes reconstructed from real version-control history.
+Built by [14Dimension Enterprise](https://github.com/leegod) from a shipping Unity TRPG — bugs and fixes reconstructed from real version-control history.
 
 ---
 
@@ -73,7 +73,7 @@ leaderboard's top row by giving the model what's *normal* for your codebase.
 
 ## License & citation
 
-- **Data** (`data/`): CC-BY-4.0 — free to use **with attribution to 14dimension**.
+- **Data** (`data/`): CC-BY-4.0 — free to use **with attribution to 14Dimension Enterprise**.
 - **Code** (`eval/`): MIT.
 
 ```bibtex
