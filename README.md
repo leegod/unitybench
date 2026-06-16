@@ -32,7 +32,7 @@ Bug detection on real Unity gameplay code (24 bugs / 22 clean). **Recall** = rea
 
 **What jumps out:**
 1. **Every frontier model over-flags on real game code** — high recall, low specificity. On long, messy gameplay methods, "find bugs" makes them flag *something* almost every time.
-2. **Project-context (RAG) is the single biggest lever** — injecting the project's conventions/APIs nearly **4×'d the balance** (36 → 73) of the same base model, by teaching it what's *normal* for this codebase.
+2. **Project-context (RAG) is the single biggest lever** — injecting the project's conventions/APIs **doubled the balance** (36 → 73) and lifted **specificity nearly 4×** (23% → 82%) for the same base model, by teaching it what's *normal* for this codebase.
 3. **Binary recall/specificity is necessary but not sufficient** — see Methodology.
 
 ---
