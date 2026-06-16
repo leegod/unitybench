@@ -18,19 +18,21 @@ Built by [14Dimension Enterprise](https://github.com/leegod) from a shipping Uni
 
 ## Review track — a methodology finding, not a leaderboard
 
-We ran five models on 24 buggy + 22 "post-fix" gameplay methods, expecting to **rank** them by recall (catch the real bug) and specificity (stay quiet on already-fixed code). The raw numbers:
+We ran seven models on 24 buggy + 22 "post-fix" gameplay methods, expecting to **rank** them by recall (catch the real bug) and specificity (stay quiet on already-fixed code). The raw numbers:
 
 | Model | Recall (real bug flagged) | Flag rate on "post-fix" methods |
 |---|---|---|
 | GPT-5.5 | 100% | 91% |
+| Opus 4.8 | 100% | 100% |
 | Qwen3-Coder (open, no context) | 92% | 77% |
 | Gemini 2.5 Pro | 67% | 82% |
-| Claude Sonnet 4.5 | 46% | 82% |
 | Qwen3-Coder **+ project context (RAG)** | 67% | 18% |
+| Gemini 3.1 Pro | 62% | 55% |
+| Claude Sonnet 4.5 | 46% | 64% |
 
-A naive "balance" (harmonic mean) score would rank GPT-5.5 **last** — it flags almost everything. **That ranking is wrong, and *why* it's wrong is the most useful result in this benchmark.**
+A naive "balance" (harmonic mean) score would rank GPT-5.5 and Opus 4.8 **last** — they flag almost everything. **That ranking is wrong, and *why* it's wrong is the most useful result in this benchmark.**
 
-We hand-read *every* flag GPT-5.5 raised on the "post-fix" methods. **They are overwhelmingly real, reasonable review issues** — unchecked return values, missing null guards, non-atomic reward grants that allow duplication, missing idempotency on click handlers, `Resources.Load` returning null, `OnDestroy` firing on scene-unload. These are not hallucinated false positives; they're what a senior reviewer flags. (GPT-5.5 *did* return `CLEAN` on the two methods that truly had no residual issue — it isn't flagging blindly.)
+We hand-read the flags the thorough frontier models (GPT-5.5, Opus 4.8) raised on the "post-fix" methods, then ran a **convention-aware per-flag judge** (given the project's own conventions, cross-checked by two independent judges) across all models. Their flags are **predominantly real, reasonable review issues** — unchecked return values, missing null guards, non-atomic reward grants that allow duplication, missing idempotency on click handlers, `Resources.Load` returning null, `OnDestroy` firing on scene-unload. These are not hallucinated false positives; they're what a senior reviewer flags. (GPT-5.5 *did* return `CLEAN` on the two methods that truly had no residual issue — it isn't flagging blindly.)
 
 The ground truth is the problem: a "post-fix" method is just the version where **one specific bug** was fixed — not a method with **zero** issues. Real shipping game code always carries residual concerns, so "specificity" here **punishes the most thorough reviewer**, and a balance score built on it is upside-down.
 
@@ -49,7 +51,7 @@ A clean/buggy label on a control set is the wrong instrument for code review, fo
 - The "post-fix" methods are **not pristine** — they're the version where *one* bug was fixed, and strong models legitimately find *other* residual issues in them.
 - A "find bugs" prompt makes **every** capable model surface *something*, so raw specificity collapses — and collapses **most** for the **most thorough** model.
 
-The right instrument is a **per-flag verdict** — classify each flag as **real / nitpick / false-positive** — not a clean/buggy match. As a first pass we hand-read GPT-5.5's flags on the post-fix set and found them overwhelmingly **real**; a full LLM-as-judge scoring across all models is the proper next step, and the reason we do **not** publish a balance ranking. *Measure the flags, not the binary.*
+The right instrument is a **per-flag verdict** — classify each flag as **real / nitpick / false-positive** — not a clean/buggy match. We did this: a convention-aware judge (given the project's own conventions) scored every flag, cross-checked by two independent judges. The thorough frontier models (GPT-5.5, Opus 4.8) score highest, and their "post-fix" flags are **predominantly real**. But the two judges disagree enough (46–88% agreement across models) that the **absolute precision numbers need human gold labels before they can be ranked** — which is exactly why we publish recall + flag-rate here, not a precision/balance leaderboard. *Measure the flags, not the binary.*
 
 ---
 
