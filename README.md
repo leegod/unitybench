@@ -12,38 +12,44 @@ Built by [14Dimension Enterprise](https://github.com/leegod) from a shipping Uni
 
 **1. Knowledge** (`data/knowledge/`, ~146 items) — Unity 6 lifecycle/API Q&A + short "write this MonoBehaviour" compile tasks. Tests whether a model actually knows *current* Unity 6 (post-cutoff API, common pitfalls).
 
-**2. Review** (`data/review/`, 24 buggy + 22 clean) — real Unity **gameplay** methods, each in two states: the **pre-fix (buggy)** version and the **post-fix (clean)** version, reconstructed from version-control history. Tests two things at once:
-- **Recall** — does it flag the *real* bug? (on `bugs.jsonl`)
-- **Specificity** — does it stay quiet on already-fixed/clean code, instead of crying wolf? (on `clean.jsonl`)
+**2. Review** (`data/review/`, 24 buggy + 22 post-fix) — real Unity **gameplay** methods, each in two states: the **pre-fix (buggy)** version and the **post-fix** version, reconstructed from version-control history. We measure **recall** (does it flag the *real* bug?) — and the "post-fix" set turned out to be a **methodology finding**, not a clean specificity control (see the Review-track section below for why).
 
 ---
 
-## 🏆 Leaderboard — Review track
+## Review track — a methodology finding, not a leaderboard
 
-Bug detection on real Unity gameplay code (24 bugs / 22 clean). **Recall** = real bugs flagged. **Quiet** = clean methods left alone (no false alarm). **Balance** = harmonic mean.
+We ran five models on 24 buggy + 22 "post-fix" gameplay methods, expecting to **rank** them by recall (catch the real bug) and specificity (stay quiet on already-fixed code). The raw numbers:
 
-| Model | Recall | Quiet (specificity) | Balance |
-|---|---|---|---|
-| **Qwen3-Coder + project-context (RAG)** | 67% | **82%** | **73** |
-| Qwen3-Coder (open, no context) | 92% | 23% | 36 |
-| Gemini 2.5 Pro | 67% | 18% | 29 |
-| Claude Sonnet 4.5 | 46% | 18% | 26 |
-| GPT-5.5 | 100% | 9% | 17 |
+| Model | Recall (real bug flagged) | Flag rate on "post-fix" methods |
+|---|---|---|
+| GPT-5.5 | 100% | 91% |
+| Qwen3-Coder (open, no context) | 92% | 77% |
+| Gemini 2.5 Pro | 67% | 82% |
+| Claude Sonnet 4.5 | 46% | 82% |
+| Qwen3-Coder **+ project context (RAG)** | 67% | 18% |
 
-**What jumps out:**
-1. **Every frontier model over-flags on real game code** — high recall, low specificity. On long, messy gameplay methods, "find bugs" makes them flag *something* almost every time.
-2. **Project-context (RAG) is the single biggest lever** — injecting the project's conventions/APIs **doubled the balance** (36 → 73) and lifted **specificity nearly 4×** (23% → 82%) for the same base model, by teaching it what's *normal* for this codebase.
-3. **Binary recall/specificity is necessary but not sufficient** — see Methodology.
+A naive "balance" (harmonic mean) score would rank GPT-5.5 **last** — it flags almost everything. **That ranking is wrong, and *why* it's wrong is the most useful result in this benchmark.**
+
+We hand-read *every* flag GPT-5.5 raised on the "post-fix" methods. **They are overwhelmingly real, reasonable review issues** — unchecked return values, missing null guards, non-atomic reward grants that allow duplication, missing idempotency on click handlers, `Resources.Load` returning null, `OnDestroy` firing on scene-unload. These are not hallucinated false positives; they're what a senior reviewer flags. (GPT-5.5 *did* return `CLEAN` on the two methods that truly had no residual issue — it isn't flagging blindly.)
+
+The ground truth is the problem: a "post-fix" method is just the version where **one specific bug** was fixed — not a method with **zero** issues. Real shipping game code always carries residual concerns, so "specificity" here **punishes the most thorough reviewer**, and a balance score built on it is upside-down.
+
+**What this track actually shows:**
+1. On long, real game methods, every capable model flags *something* — and for frontier models, that something is usually legitimate.
+2. **Binary recall/specificity is the wrong instrument** for "is this a good reviewer." You need a per-flag verdict (real / nitpick / false-positive), not a clean/buggy label — see Methodology.
+3. **Project context (RAG) doesn't make a model better at *finding* bugs** — it makes it flag *less* (77% → 18% here on the same base model) by teaching it what's normal for the codebase. Whether that's an improvement depends on whether the suppressed flags were real — usually a mix.
+
+→ Treat this as a **case study in why bug-detection benchmarks are hard**, not a model ranking.
 
 ---
 
-## Methodology — why binary metrics lie (and what to do)
+## Methodology — why binary metrics mislead here
 
-A naive `precision/recall` on a "clean" control set is misleading here, for two reasons we measured directly:
-- The "clean" (post-fix) methods are **not pristine** — strong models legitimately find *residual* issues in them.
-- A "find bugs" prompt makes **every** capable model surface *something*, so raw specificity collapses for all of them.
+A clean/buggy label on a control set is the wrong instrument for code review, for two reasons we measured directly:
+- The "post-fix" methods are **not pristine** — they're the version where *one* bug was fixed, and strong models legitimately find *other* residual issues in them.
+- A "find bugs" prompt makes **every** capable model surface *something*, so raw specificity collapses — and collapses **most** for the **most thorough** model.
 
-So beyond the binary, we ran an **LLM-as-judge precision pass**: each flag is classified as **real / nitpick / false-positive**. This surfaces what F1 hides — e.g. a small fine-tuned reviewer can post a high *recall* while its flags are **almost entirely false positives**, whereas a frontier model's flags are mostly **real**. *Measure the flags, not just the binary.* The takeaway is baked into `run_review.py`'s output reminder; the leaderboard above reports the binary metrics.
+The right instrument is a **per-flag verdict** — classify each flag as **real / nitpick / false-positive** — not a clean/buggy match. As a first pass we hand-read GPT-5.5's flags on the post-fix set and found them overwhelmingly **real**; a full LLM-as-judge scoring across all models is the proper next step, and the reason we do **not** publish a balance ranking. *Measure the flags, not the binary.*
 
 ---
 
@@ -52,16 +58,17 @@ So beyond the binary, we ran an **LLM-as-judge precision pass**: each flag is cl
 ```bash
 export OPENROUTER_API_KEY=sk-...
 
-# score any model on the review track (recall + specificity + balance)
+# score any model on the review track (recall + how often it flags post-fix methods)
 python eval/run_review.py --model openai/gpt-5.5
 
-# inject your project's conventions (RAG-style) — the lever that tops the leaderboard
+# inject your project's conventions (RAG-style) and watch the flag rate change
 python eval/run_review.py --model qwen/qwen3-coder --context your_conventions.txt
 ```
 
 `--context` takes a plain-text file of your project's conventions/APIs (e.g. "HP changes go
-through `HealingService.Heal`; check the bool return of `AddItem`; …"). Reproduce the
-leaderboard's top row by giving the model what's *normal* for your codebase.
+through `HealingService.Heal`; check the bool return of `AddItem`; …"). Giving the model what's
+*normal* for your codebase makes it flag **less** — which, as the Review-track finding explains, is
+not the same as making it *better*. Inspect the flags, don't trust the binary.
 
 ---
 
