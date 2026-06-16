@@ -1,4 +1,4 @@
-# UnityBench — by **14dimension**
+# UnityBench — by **14Dimension Enterprise**
 
 **A two-track evaluation for Unity 6 / C# coding models: domain *knowledge* + real-world *bug review*.**
 
@@ -79,10 +79,10 @@ leaderboard's top row by giving the model what's *normal* for your codebase.
 ```bibtex
 @misc{unitybench2026,
   title  = {UnityBench: Unity 6 Knowledge \& Real-World Bug-Review Evaluation},
-  author = {14dimension},
+  author = {14Dimension Enterprise},
   year   = {2026},
   url    = {https://github.com/leegod/unitybench}
 }
 ```
 
-— Built and measured hands-on by **14dimension** while shipping a Unity game.
+— Built and measured hands-on by **14Dimension Enterprise** while shipping a Unity game.
