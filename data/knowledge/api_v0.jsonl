@@ -1,0 +1,16 @@
+{"id": "api-001", "track": "api", "type": "exact", "question": "In Unity, which MonoBehaviour lifecycle method is called first: Awake or Start? Answer with one word.", "answer": "Awake"}
+{"id": "api-002", "track": "api", "type": "exact", "question": "In Unity, what is the name of the MonoBehaviour callback that runs at a fixed timestep and is the correct place to apply Rigidbody forces? Answer with the method name only.", "answer": "FixedUpdate"}
+{"id": "api-003", "track": "api", "type": "exact", "question": "Which MonoBehaviour method starts a coroutine? Answer with the method name only.", "answer": "StartCoroutine"}
+{"id": "api-004", "track": "api", "type": "exact", "question": "Which class do you 'yield return new' to wait for a given number of seconds inside a Unity coroutine (scaled time)? Class name only.", "answer": "WaitForSeconds"}
+{"id": "api-005", "track": "api", "type": "exact", "question": "What does GetComponent<T>() return when the component is not present on the GameObject? One word.", "answer": "null"}
+{"id": "api-006", "track": "api", "type": "exact", "question": "Which preprocessor symbol wraps code that must only compile in the Unity Editor? Symbol only.", "answer": "UNITY_EDITOR"}
+{"id": "api-007", "track": "api", "type": "exact", "question": "Name the 3D physics callback invoked when a non-trigger collider first touches another collider. Method name only.", "answer": "OnCollisionEnter"}
+{"id": "api-008", "track": "api", "type": "exact", "question": "Name the 3D physics callback invoked when a collider first enters a trigger volume. Method name only.", "answer": "OnTriggerEnter"}
+{"id": "api-009", "track": "api", "type": "exact", "question": "Which C# attribute exposes a private field in the Unity Inspector? Attribute name only, without brackets.", "answer": "SerializeField"}
+{"id": "api-010", "track": "api", "type": "exact", "question": "Which Time property gives the frame delta time unaffected by Time.timeScale? Property name only.", "answer": "unscaledDeltaTime"}
+{"id": "api-011", "track": "api", "type": "exact", "question": "Which Vector3 property returns the vector with magnitude 1 (without modifying the original)? Property name only.", "answer": "normalized"}
+{"id": "api-012", "track": "api", "type": "exact", "question": "Which MonoBehaviour callback is invoked when the object is being destroyed? Method name only.", "answer": "OnDestroy"}
+{"id": "api-013", "track": "api", "type": "exact", "question": "Which SceneManager method loads a scene by name or build index? Method name only.", "answer": "LoadScene"}
+{"id": "api-014", "track": "api", "type": "regex", "question": "In a fresh Unity project, what is the default fixed timestep in seconds (the value of Time.fixedDeltaTime)? Number only.", "answer": "^0?\\.02(0+)?$"}
+{"id": "api-015", "track": "api", "type": "exact", "question": "Which MonoBehaviour callback runs after all Update calls each frame (commonly used for camera follow)? Method name only.", "answer": "LateUpdate"}
+{"id": "api-016", "track": "api", "type": "exact", "question": "Which attribute forces a component to be added together with required component types, e.g. ensuring a Rigidbody exists? Attribute name only, without brackets.", "answer": "RequireComponent"}

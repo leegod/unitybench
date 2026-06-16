@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: "UnityBench: Unity 6 Knowledge & Real-World Bug-Review Evaluation"
+message: "If you use this benchmark, please cite it and credit 14dimension."
+authors:
+  - name: "14dimension"
+version: "1.0.0"
+date-released: "2026-06-16"
+license: "CC-BY-4.0"
+url: "https://github.com/leegod/unitybench"
+keywords:
+  - unity
+  - code-review
+  - llm-evaluation
+  - benchmark
+  - bug-detection
