@@ -4,7 +4,7 @@
 
 Generalist code models are strong — but how well do they actually handle **Unity 6**, and can they find **real bugs in real game code** without crying wolf? There was no good public answer. This benchmark is one.
 
-Built by [14Dimension Enterprise](https://github.com/leegod) from a shipping Unity TRPG — bugs and fixes reconstructed from real version-control history.
+Built by [14Dimension Enterprise](https://github.com/leegod) from a shipping Unity game — bugs and fixes reconstructed from real version-control history.
 
 ---
 
@@ -76,7 +76,7 @@ not the same as making it *better*. Inspect the flags, don't trust the binary.
 
 ## Data notes / scope
 
-- Review code is **real Unity gameplay logic** (rewards, combat, map/node systems), reconstructed pre-/post-fix from version control. **Proprietary in-game AI and console-platform code are excluded.**
+- Review code is **real Unity gameplay logic** (rewards, combat, map/node systems), reconstructed pre-/post-fix from version control.  
 - 46 review items is a focused, honest set — a *case study + methodology*, not a thousand-item leaderboard. Knowledge track is broader.
 - `context_needed: true` marks bugs that require cross-file context (no snippet-only model can fully catch those).
 
